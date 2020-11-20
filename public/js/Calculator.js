@@ -95,7 +95,8 @@ class Calculator {
             this.lastCalcHistory = operator;
         } else {
             // LAST IS NOT AN OPERATOR
-            if (this._calcHistory.length > 3) {
+            console.log(this._calcHistory.length);
+            if (this._calcHistory.length == 3) {
                 let lastCalc = this.tryCalculate();
                 this._calcHistory = [lastCalc];
                 this.display = lastCalc;
