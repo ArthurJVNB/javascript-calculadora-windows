@@ -2,18 +2,16 @@ class Calculator {
     constructor(params) {
         this._displayEl = document.querySelector('#display');
 
-        this._calcHistory = [0];
+        this._calcHistory = [];
+        this._lastOperator;
+        this._lastNumber;
 
-        this.test();
         this.initAll();
-    }
-
-    // TEST PURPOSES ONLY!
-    test() {
     }
 
     initAll() {
         this.display = 0
+        this.clearCalcHistory();
         this.initTouch();
     }
     
@@ -29,12 +27,19 @@ class Calculator {
 
     buttonTouchEvent(button) {
         if (isNaN(button)) {
+            console.log(button);
+            
+            if (button == 'X') {
+                button = '*';
+            }
+
             switch(button) {
                 case '+':
                 case '-':
-                case 'X':
+                case '*':
                 case '/':
                     this.putOperator(button);
+                    this.lastOperator = button;
                     break;
 
                 case ',':
@@ -42,7 +47,19 @@ class Calculator {
                     break;
                 
                 case '=':
-                    this.tryCalculate();
+                    this.displayCalculation();
+                    break;
+
+                case 'C':
+                    this.clearAllCalculation();
+                    break;
+
+                case 'CE':
+                    this.clearLastCalculation();
+                    break;
+
+                case '←':
+                    this.eraseLastDigit();
                     break;
             }
         } else {
@@ -78,7 +95,14 @@ class Calculator {
             this.lastCalcHistory = operator;
         } else {
             // LAST IS NOT AN OPERATOR
+            if (this._calcHistory.length > 3) {
+                let lastCalc = this.tryCalculate();
+                this._calcHistory = [lastCalc];
+                this.display = lastCalc;
+            }
+
             this._calcHistory.push(operator);
+
         }
     }
 
@@ -109,8 +133,62 @@ class Calculator {
         }
     }
 
+    displayCalculation() {
+        let calculation = this.tryCalculate();
+        if (calculation) {
+            this.clearCalcHistory();
+            this.display = calculation;
+        }
+    }
+
     displayError() {
         this.display = 'ERROR';
+    }
+
+    eraseLastDigit() {
+        let formatedCalc = this.lastCalcHistory.toString();
+
+        if (!this.isOperator(formatedCalc)) {
+            if (formatedCalc.length > 1) {
+                formatedCalc = formatedCalc[formatedCalc.length - 2];
+            } else {
+                formatedCalc = 0;
+            }
+
+            this.lastCalcHistory = formatedCalc;
+            this.display = this.lastCalcHistory;
+        }
+    }
+
+    clearAllCalculation() {
+        this.clearCalcHistory();
+        this.display = 0;
+    }
+
+    clearLastCalculation() {
+        this.lastCalcHistory = 0;
+        this.display = this.lastCalcHistory;
+    }
+
+    clearCalcHistory() {
+        this._calcHistory = [0];
+    }
+
+    //#region gets and sets
+    get lastOperator() {
+        return this._lastOperator;
+    }
+
+    set lastOperator(value) {
+        this._lastOperator = value;
+    }
+
+    get lastNumber() {
+        return this._lastNumber;
+    }
+
+    set lastNumber(value) {
+        this._lastNumber = value;
     }
 
     get lastCalcHistory() {
@@ -128,4 +206,5 @@ class Calculator {
     set display(value) {
         this._displayEl.innerHTML = value;
     }
+    //#endregion
 }
