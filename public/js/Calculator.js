@@ -95,7 +95,6 @@ class Calculator {
             this.lastCalcHistory = operator;
         } else {
             // LAST IS NOT AN OPERATOR
-            console.log(this._calcHistory.length);
             if (this._calcHistory.length == 3) {
                 let lastCalc = this.tryCalculate();
                 this._calcHistory = [lastCalc];
@@ -167,8 +166,10 @@ class Calculator {
     }
 
     clearLastCalculation() {
-        this.lastCalcHistory = 0;
-        this.display = this.lastCalcHistory;
+        if (!this.isOperator(this.lastCalcHistory)) {
+            this.lastCalcHistory = 0;
+            this.display = this.lastCalcHistory;
+        }
     }
 
     clearCalcHistory() {
