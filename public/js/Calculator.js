@@ -149,9 +149,9 @@ class Calculator {
         let formatedCalc = this.lastCalcHistory.toString();
 
         if (!this.isOperator(formatedCalc)) {
-            if (formatedCalc.length > 1) {
-                formatedCalc = formatedCalc[formatedCalc.length - 2];
-            } else {
+            formatedCalc = formatedCalc.substring(0, this.lastCalcHistory.length - 1);
+            
+            if (formatedCalc.length <= 0) {
                 formatedCalc = 0;
             }
 
