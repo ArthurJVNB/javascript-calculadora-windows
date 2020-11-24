@@ -21,18 +21,18 @@ class Calculator {
         
         buttons.forEach((button) => {
             button.addEventListener('click', () => {
-                this.buttonEvent(button.innerHTML);
+                this.executeButton(button.innerHTML);
             });
         });
     }
 
     initEventKeyboard() {
         document.addEventListener('keyup', e => {
-            this.buttonEvent(e.key);
+            this.executeButton(e.key);
         })
     }
 
-    buttonEvent(button) {
+    executeButton(button) {
         if (isNaN(button)) {
             console.log(button);
             
