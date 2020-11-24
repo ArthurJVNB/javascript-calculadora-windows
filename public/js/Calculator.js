@@ -2,30 +2,37 @@ class Calculator {
     constructor(params) {
         this._displayEl = document.querySelector('#display');
 
-        this._calcHistory = [];
+        this._calcHistory = [0];
         this._lastOperator;
         this._lastNumber;
 
-        this.initAll();
+        this.initEventAll();
     }
 
-    initAll() {
+    initEventAll() {
         this.display = 0
         this.clearCalcHistory();
-        this.initTouch();
+        this.initEventTouch();
+        this.initEventKeyboard();
     }
     
-    initTouch() {
-        let buttons = document.querySelectorAll('.btn');
+    initEventTouch() {
+        const buttons = document.querySelectorAll('.btn');
         
         buttons.forEach((button) => {
             button.addEventListener('click', () => {
-                this.buttonTouchEvent(button.innerHTML);
+                this.buttonEvent(button.innerHTML);
             });
         });
     }
 
-    buttonTouchEvent(button) {
+    initEventKeyboard() {
+        document.addEventListener('keyup', e => {
+            this.buttonEvent(e.key);
+        })
+    }
+
+    buttonEvent(button) {
         if (isNaN(button)) {
             console.log(button);
             
@@ -43,14 +50,17 @@ class Calculator {
                     break;
 
                 case ',':
+                case '.':
                     this.putComma();
                     break;
                 
                 case '=':
+                case 'Enter':
                     this.displayCalculation();
                     break;
 
                 case 'C':
+                case 'Escape':
                     this.clearAllCalculation();
                     break;
 
@@ -59,6 +69,7 @@ class Calculator {
                     break;
 
                 case '←':
+                case 'Backspace':
                     this.eraseLastDigit();
                     break;
             }
@@ -125,9 +136,13 @@ class Calculator {
 
     tryCalculate() {
         try {
-            let string = this._calcHistory.join('');
-            console.log(eval(string));
-            return eval(string);
+            let stringToEval;
+
+            //TODO: implement autocomplete calculation
+
+            stringToEval = this._calcHistory.join('');
+            console.log(eval(stringToEval));
+            return eval(stringToEval);
         } catch (error) {
             this.displayError();
         }
